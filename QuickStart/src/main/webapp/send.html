@@ -99,6 +99,33 @@ footer {
     color: #555;
 }
 
+/* Sidebar Styles */
+#sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#sidebar h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+#sidebar p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
@@ -121,10 +148,17 @@ footer {
     <div class="progress">
         <div class="progress-bar" id="progressBar"></div>
     </div>
+    <div id="transferProgressText">Transfer Progress: 0%</div>
     <p id="statusMessage"></p>
 
     <footer>&copy; 2025 Secure File Transfer | By Aniket Gawande</footer>
 </div>
+
+
+<!-- <div id="sidebar">
+    <h2>Transfer Progress</h2>
+    <p id="transferStatus">0%</p>
+</div> -->
 
 <script>
 document.getElementById('sendBtn').addEventListener('click', async () => {
@@ -133,6 +167,8 @@ document.getElementById('sendBtn').addEventListener('click', async () => {
     const progressBar = document.getElementById('progressBar');
     const sendBtn = document.getElementById('sendBtn');
     const loadingSpinner = document.getElementById('loadingSpinner');
+    const transferStatus = document.getElementById('transferStatus');
+    const transferProgressText = document.getElementById('transferProgressText');
 
     if (!file) {
         alert('Please select a file.');
@@ -147,17 +183,30 @@ document.getElementById('sendBtn').addEventListener('click', async () => {
     sendBtn.disabled = true;
     sendBtn.style.opacity = '0.5';
 
+    let progress = 0;
+
+ // Simulate file receiving progress
+    const interval = setInterval(() => {
+        if (progress < 100) {
+            progress += 1;
+            progressBar.style.width = `${progress}%`;
+            transferProgressText.textContent = `Transfer Progress: ${progress}%`;
+        } else {
+            clearInterval(interval);  // Stop when progress reaches 100%
+            statusMessage.textContent = 'File received successfully!';
+            statusMessage.style.color = 'green';
+            transferProgressText.textContent = 'Transfer Progress: 100%';
+        }
+    }, 400); // Increments every 50ms 
+    
+
     try {
         const response = await fetch('SendFileServlet', {
             method: 'POST',
-            body: formData,
+            body: formData
         });
 
-        if (response.ok) {
-            statusMessage.textContent = 'File uploaded successfully!';
-            statusMessage.style.color = 'green';
-            progressBar.style.width = '100%';
-        } else {
+        if (!response.ok) {
             statusMessage.textContent = 'Failed to upload file.';
             statusMessage.style.color = 'red';
         }
@@ -176,8 +225,7 @@ document.getElementById('sendBtn').addEventListener('click', async () => {
 // Reload page every 60 seconds
 setInterval(() => {
     location.reload();
-}, 240000);
-
+}, 300000);
 </script>
 
 </body>

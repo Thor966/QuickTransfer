@@ -9,6 +9,5 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry exported="true" kind="lib" path="C:/Program Files/Apache Software Foundation/Tomcat 10.1_Tomcat1070/lib/servlet-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Aniket/OneDrive/Desktop/DBjar/jakarta.websocket-api-2.2.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
