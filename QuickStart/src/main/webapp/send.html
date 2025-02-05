@@ -177,7 +177,71 @@ document.getElementById('sendBtn').addEventListener('click', async () => {
 setInterval(() => {
     location.reload();
 }, 240000);
-</script>
+
+
+
+document.getElementById('sendBtn').addEventListener('click', async () => {
+    const file = document.getElementById('fileInput').files[0];
+    const statusMessage = document.getElementById('statusMessage');
+    const progressBar = document.getElementById('progressBar');
+    const sendBtn = document.getElementById('sendBtn');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+
+    if (!file) {
+        alert('Please select a file.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Show spinner, disable button
+    loadingSpinner.style.display = 'block';
+    sendBtn.disabled = true;
+    sendBtn.style.opacity = '0.5';
+
+    try {
+        const response = await fetch('SendFileServlet', {
+            method: 'POST',
+            body: formData,
+        });
+
+        // Fake progress bar animation
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (progress < 100) {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+            } else {
+                clearInterval(interval);
+            }
+        }, 500);
+
+        if (response.ok) {
+            statusMessage.textContent = 'File uploaded successfully!';
+            statusMessage.style.color = 'green';
+            progressBar.style.width = '100%';
+
+            // Notify the receiver page that a file is available
+            const socket = new WebSocket("ws://localhost:8080/file-notify");
+            socket.onopen = function() {
+                socket.send(JSON.stringify({ message: "New file available for download!" }));
+            };
+        } else {
+            statusMessage.textContent = 'Failed to upload file.';
+            statusMessage.style.color = 'red';
+        }
+    } catch (error) {
+        statusMessage.textContent = 'Network error. Try again.';
+        statusMessage.style.color = 'red';
+        console.error('Error:', error);
+    } finally {
+        // Hide spinner, enable button
+        loadingSpinner.style.display = 'none';
+        sendBtn.disabled = false;
+        sendBtn.style.opacity = '1';
+    }
+});</script>
 
 </body>
 </html>
