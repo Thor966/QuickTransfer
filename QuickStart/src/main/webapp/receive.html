@@ -152,42 +152,12 @@ document.getElementById('receiveBtn').addEventListener('click', async () => {
     }
 });
 
-// Reload page every 60 seconds
+
 setInterval(() => {
     location.reload();
 }, 240000);
 
-const socket = new WebSocket("ws://localhost:8080/file-notify"); // WebSocket connection
-const receivedFileContainer = document.getElementById('receivedFile');
-
-socket.onmessage = function (event) {
-    const data = JSON.parse(event.data);
-
-    if (data.message === "New file available for download!") {
-        alert("A new file is available for download!");
-
-        // Show progress animation
-        let progress = 0;
-        const progressBar = document.createElement('div');
-        progressBar.style.width = '0%';
-        progressBar.style.height = '5px';
-        progressBar.style.background = '#00ff77';
-        progressBar.style.transition = 'width 0.4s ease-in-out';
-
-        receivedFileContainer.innerHTML = ''; 
-        receivedFileContainer.appendChild(progressBar);
-
-        const interval = setInterval(() => {
-            if (progress < 100) {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-            } else {
-                clearInterval(interval);
-                receivedFileContainer.innerHTML = '<p style="color:green;">File is ready to download!</p>';
-            }
-        }, 500);
-    }
-};</script>
+</script>
 
 </body>
 </html>

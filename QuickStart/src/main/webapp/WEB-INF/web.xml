@@ -9,14 +9,4 @@
         <welcome-file>index.html</welcome-file> 
     </welcome-file-list>
 
-    <servlet>
-        <servlet-name>FileNotificationServlet</servlet-name>
-        <servlet-class>com.ag.file.FileNotificationServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>FileNotificationServlet</servlet-name>
-        <url-pattern>/file-notify</url-pattern>
-    </servlet-mapping>
-
 </web-app>
